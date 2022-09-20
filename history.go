@@ -22,6 +22,7 @@ func (h History) toString() string {
 	history := []string(h)
 	return strings.Join(history, ",	")
 }
+
 func (h History) saveHistoryToFile(command string) {
 	bs := []byte(h.toString())
 	os.WriteFile(HISTORY_FILENAME, bs, 0666)
@@ -36,6 +37,11 @@ func (historyPointer *History) update(command string) {
 }
 
 func restoreHistory() History {
-	bs, _ := os.ReadFile(HISTORY_FILENAME)
-	return History(strings.Split(string(bs), ","))
+
+	byteSlice, err := os.ReadFile(HISTORY_FILENAME)
+	if err != nil {
+		fmt.Println("Error is in read file", err)
+		//os.Exit(1)
+	}
+	return History(strings.Split(string(byteSlice), ","))
 }
